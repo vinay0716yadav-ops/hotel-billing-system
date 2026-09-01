@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Invoice ' + ${bill.invoiceNumber} + ' - ' + ${hotelName}">Hotel Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+<body class="bg-light">
+
+    <!-- Top Action Bar (hidden when printing) -->
+    <div class="no-print bg-dark py-2 px-4 text-white d-flex justify-content-between align-items-center">
+        <a th:href="@{/billing}" class="btn btn-outline-light btn-sm rounded-pill">
+            <i class="fas fa-arrow-left me-1"></i> Back to Billing
+        </a>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                <i class="fas fa-print me-1"></i> Print / Save as PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Printable Invoice Document -->
+    <div class="invoice-container">
+        <!-- Header -->
+        <div class="row align-items-center mb-4 pb-3 border-bottom">
+            <div class="col-sm-7">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="fas fa-hotel text-primary fs-2"></i>
+                    <h2 class="fw-bold mb-0 text-dark" th:text="${hotelName}">Grand Horizon Luxury Resort</h2>
+                </div>
+                <p class="text-muted small mb-1" th:text="${hotelAddress}">100 Oceanfront Avenue, Coastal Bay, CA 90210</p>
+                <p class="text-muted small mb-0">
+                    <i class="fas fa-phone-alt me-1"></i> <span th:text="${hotelPhone}">+1 (800) 555-0199</span> &bull; 
+                    <i class="fas fa-envelope ms-2 me-1"></i> <span th:text="${hotelEmail}">billing@grandhorizonhotel.com</span>
+                </p>
+            </div>
+            <div class="col-sm-5 text-sm-end mt-3 mt-sm-0">
+                <span class="text-uppercase fw-bold text-muted small">TAX INVOICE / RECEIPT</span>
+                <h3 class="fw-extrabold text-primary mb-1" th:text="${bill.invoiceNumber}">INV-2026-1001</h3>
+                <div class="mt-2">
+                    <span th:if="${bill.paymentStatus.name() == 'PAID'}" class="badge-paid px-3 py-1 fs-6">
+                        <i class="fas fa-check-circle me-1"></i> SETTLED & PAID
+                    </span>
+                    <span th:if="${bill.paymentStatus.name() == 'PENDING'}" class="badge-pending px-3 py-1 fs-6">
+                        <i class="fas fa-clock me-1"></i> PAYMENT PENDING
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meta Information: Billed To & Stay Details -->
+        <div class="row g-4 mb-4">
+            <div class="col-6">
+                <h6 class="text-uppercase text-muted fw-bold small mb-2">Billed To (Guest Details)</h6>
+                <h5 class="fw-bold text-dark mb-1" th:text="${bill.booking.guest.fullName}">Alexander Wright</h5>
+                <div class="text-muted small" th:text="${bill.booking.guest.email}">alex@email.com</div>
+                <div class="text-muted small" th:text="${bill.booking.guest.phone}">+1 (555) 234-5678</div>
+                <div class="text-muted small" th:if="${bill.booking.guest.address != null}" th:text="${bill.booking.guest.address} + ', ' + ${bill.booking.guest.city}">Address</div>
+                <div class="text-muted small" th:if="${bill.booking.guest.idProofNumber != null}">ID: <span th:text="${bill.booking.guest.idProofType} + ' - ' + ${bill.booking.guest.idProofNumber}">Passport</span></div>
+            </div>
+            <div class="col-6 text-end">
+                <h6 class="text-uppercase text-muted fw-bold small mb-2">Reservation & Invoice Details</h6>
+                <div class="small mb-1"><span class="text-muted">Booking Reference:</span> <strong th:text="${bill.booking.bookingReference}">BK-2026-1001</strong></div>
+                <div class="small mb-1"><span class="text-muted">Room Assigned:</span> <strong>Room <span th:text="${bill.booking.room.roomNumber}">201</span> (<span th:text="${bill.booking.room.roomType.displayName}">Deluxe</span>)</strong></div>
+                <div class="small mb-1"><span class="text-muted">Check-In Date:</span> <span th:text="${#temporals.format(bill.booking.checkInDate, 'dd MMM yyyy')}">01 Sep 2026</span></div>
+                <div class="small mb-1"><span class="text-muted">Check-Out Date:</span> <span th:text="${#temporals.format(bill.booking.checkOutDate, 'dd MMM yyyy')}">04 Sep 2026</span></div>
+                <div class="small mb-1"><span class="text-muted">Invoice Date:</span> <span th:text="${#temporals.format(bill.issueDate, 'dd MMM yyyy HH:mm')}">01 Sep 2026</span></div>
+            </div>
+        </div>
+
+        <!-- Itemized Breakdown Table -->
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 5%">#</th>
+                        <th style="width: 50%">Description / Service</th>
+                        <th class="text-center" style="width: 15%">Qty / Nights</th>
+                        <th class="text-end" style="width: 15%">Unit Rate</th>
+                        <th class="text-end" style="width: 15%">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Room Stay Charges -->
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td>
+                            <strong>Room Accommodation (<span th:text="${bill.booking.room.roomType.displayName}">Deluxe</span>)</strong>
+                            <div class="text-muted small">Room No: <span th:text="${bill.booking.room.roomNumber}">201</span> &bull; <span th:text="${bill.stayNights}">3</span> Nights Stay</div>
+                        </td>
+                        <td class="text-center" th:text="${bill.stayNights}">3</td>
+                        <td class="text-end" th:text="'$' + ${#numbers.formatDecimal(bill.roomRatePerNight, 1, 2)}">$159.00</td>
+                        <td class="text-end fw-semibold" th:text="'$' + ${#numbers.formatDecimal(bill.totalRoomCharge, 1, 2)}">$477.00</td>
+                    </tr>
+                    <!-- Itemized Services -->
+                    <tr th:each="item, stat : ${bill.items}">
+                        <td class="text-center" th:text="${stat.count + 1}">2</td>
+                        <td>
+                            <strong th:text="${item.itemName}">Breakfast Buffet</strong>
+                            <div class="text-muted small" th:if="${item.category != null}" th:text="${item.category.displayName}">Category</div>
+                        </td>
+                        <td class="text-center" th:text="${item.quantity}">2</td>
+                        <td class="text-end" th:text="'$' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">$25.00</td>
+                        <td class="text-end fw-semibold" th:text="'$' + ${#numbers.formatDecimal(item.totalPrice, 1, 2)}">$50.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Financial Totals and Signatures -->
+        <div class="row align-items-start">
+            <div class="col-sm-6">
+                <div class="p-3 bg-light rounded-3 border">
+                    <h6 class="fw-bold mb-2 small text-uppercase text-muted">Payment Information</h6>
+                    <div class="small mb-1"><span class="text-muted">Payment Mode:</span> <strong th:text="${bill.paymentMethod != null ? bill.paymentMethod.displayName : 'Not Settled'}">Credit Card</strong></div>
+                    <div class="small mb-1" th:if="${bill.paymentTransactionId != null}"><span class="text-muted">Transaction ID:</span> <strong th:text="${bill.paymentTransactionId}">TXN-12345</strong></div>
+                    <div class="small mb-1" th:if="${bill.paidAt != null}"><span class="text-muted">Settlement Time:</span> <span th:text="${#temporals.format(bill.paidAt, 'dd MMM yyyy, HH:mm')}">Time</span></div>
+                    <div class="small text-muted mt-2" th:if="${bill.notes != null}">
+                        <em>Notes: <span th:text="${bill.notes}">Notes</span></em>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="border rounded-3 p-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal:</span>
+                        <strong th:text="'$' + ${#numbers.formatDecimal(bill.subtotal, 1, 2)}">$0.00</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Tax & GST (<span th:text="${bill.taxPercentage}">12.0</span>%):</span>
+                        <span th:text="'$' + ${#numbers.formatDecimal(bill.taxAmount, 1, 2)}">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" th:if="${bill.discountAmount > 0}">
+                        <span class="text-muted">Discount (<span th:text="${bill.discountPercentage}">5.0</span>%):</span>
+                        <span class="text-danger" th:text="'-$' + ${#numbers.formatDecimal(bill.discountAmount, 1, 2)}">-$0.00</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold fs-5 text-dark">Total Payable:</span>
+                        <span class="fw-bold fs-4 text-primary" th:text="'$' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoice Terms & Signature -->
+        <div class="row mt-5 pt-4 border-top text-muted small">
+            <div class="col-7">
+                <h6 class="fw-bold small text-dark mb-1">Terms & Conditions</h6>
+                <p class="mb-0">Thank you for choosing Grand Horizon Resort. All room keys must be returned at checkout. Please keep this invoice for your tax and expense records.</p>
+            </div>
+            <div class="col-5 text-end">
+                <div class="d-inline-block border-top border-dark pt-2 px-4 mt-4">
+                    <strong>Authorized Signature / Front Desk</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

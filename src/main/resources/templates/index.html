@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${hotelName} + ' - Billing & Management Dashboard'">Hotel Billing System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 border-bottom border-secondary">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand navbar-brand-custom text-white" th:href="@{/}">
+                <i class="fas fa-hotel text-primary me-2"></i>
+                <span th:text="${hotelName}">Grand Horizon Resort</span>
+            </a>
+            <span class="hotel-badge ms-2 d-none d-md-inline-block">Billing & Invoicing Suite</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-1">
+                    <li class="nav-item"><a class="nav-link active fw-semibold" th:href="@{/}"><i class="fas fa-chart-line me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/billing}"><i class="fas fa-file-invoice-dollar me-1"></i> Billing Folio</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/bookings}"><i class="fas fa-calendar-check me-1"></i> Reservations</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/rooms}"><i class="fas fa-door-open me-1"></i> Rooms</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a th:href="@{/billing}" class="btn btn-primary btn-sm px-3 rounded-pill shadow-sm">
+                            <i class="fas fa-plus me-1"></i> New Bill
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container-fluid px-4 py-4 flex-grow-1">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+                <h2 class="fw-bold mb-1">Billing Overview & Financial Analytics</h2>
+                <p class="text-muted mb-0">Real-time room occupancy, pending folios, and collected revenue metrics.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a th:href="@{/bookings}" class="btn btn-outline-dark rounded-pill px-3">
+                    <i class="fas fa-user-plus me-1"></i> Guest Check-In
+                </a>
+                <a th:href="@{/billing}" class="btn btn-primary rounded-pill px-3 shadow-sm">
+                    <i class="fas fa-receipt me-1"></i> Generate Invoice
+                </a>
+            </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-semibold">Total Revenue Collected</span>
+                        <h3 class="fw-bold my-1 text-dark" th:text="'$' + ${#numbers.formatDecimal(stats.totalRevenue, 1, 2)}">$0.00</h3>
+                        <span class="text-success small fw-semibold"><i class="fas fa-check-circle me-1"></i> Settled Invoices</span>
+                    </div>
+                    <div class="stat-icon green">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-semibold">Pending Folios</span>
+                        <h3 class="fw-bold my-1 text-dark" th:text="'$' + ${#numbers.formatDecimal(stats.pendingRevenue, 1, 2)}">$0.00</h3>
+                        <span class="text-warning small fw-semibold" th:text="${stats.totalPendingInvoices} + ' pending check-out'"><i class="fas fa-clock me-1"></i> 0 pending</span>
+                    </div>
+                    <div class="stat-icon amber">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-semibold">Occupancy Rate</span>
+                        <h3 class="fw-bold my-1 text-dark" th:text="${stats.occupancyRatePercentage} + '%'">0.0%</h3>
+                        <span class="text-primary small fw-semibold" th:text="${stats.occupiedRooms} + '/' + ${stats.totalRooms} + ' Rooms Active'">0/0 Rooms Active</span>
+                    </div>
+                    <div class="stat-icon blue">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-semibold">Available Rooms</span>
+                        <h3 class="fw-bold my-1 text-dark" th:text="${stats.availableRooms}">0</h3>
+                        <span class="text-info small fw-semibold">Ready for Check-In</span>
+                    </div>
+                    <div class="stat-icon purple">
+                        <i class="fas fa-key"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <!-- Active Guests Folios ready to bill -->
+            <div class="col-12 col-lg-7">
+                <div class="custom-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-user-check text-primary me-2"></i> Current In-House Guests</h5>
+                        <a th:href="@{/bookings}" class="btn btn-sm btn-link text-decoration-none">View All Stays &rarr;</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Guest</th>
+                                    <th>Room</th>
+                                    <th>Stay Dates</th>
+                                    <th>Duration</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="booking : ${activeBookings}">
+                                    <td>
+                                        <div class="fw-bold text-dark" th:text="${booking.guest.fullName}">Guest Name</div>
+                                        <small class="text-muted" th:text="${booking.guest.email}">email@example.com</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border px-2 py-1" th:text="'Room ' + ${booking.room.roomNumber}">Room 101</span>
+                                        <div class="small text-muted" th:text="${booking.room.roomType.displayName}">Deluxe Room</div>
+                                    </td>
+                                    <td class="small">
+                                        <span th:text="${#temporals.format(booking.checkInDate, 'dd MMM')}">01 Sep</span> &rarr;
+                                        <span th:text="${#temporals.format(booking.checkOutDate, 'dd MMM')}">04 Sep</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary-subtle text-secondary fw-semibold" th:text="${booking.stayDurationNights} + ' Nights'">3 Nights</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a th:href="@{/billing}" class="btn btn-sm btn-primary rounded-pill px-3">
+                                            <i class="fas fa-file-invoice me-1"></i> Bill
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(activeBookings)}">
+                                    <td colspan="5" class="text-center text-muted py-4">No active check-ins currently in hotel.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Invoices Table -->
+            <div class="col-12 col-lg-5">
+                <div class="custom-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-history text-primary me-2"></i> Recent Invoices</h5>
+                        <a th:href="@{/billing}" class="btn btn-sm btn-link text-decoration-none">All Invoices &rarr;</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Guest</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th class="text-end">View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="bill : ${recentBills}">
+                                    <td class="fw-semibold text-primary" th:text="${bill.invoiceNumber}">INV-2026-1001</td>
+                                    <td>
+                                        <span th:text="${bill.booking.guest.fullName}" class="fw-medium">Guest</span>
+                                    </td>
+                                    <td class="fw-bold text-dark" th:text="'$' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">$0.00</td>
+                                    <td>
+                                        <span th:if="${bill.paymentStatus.name() == 'PAID'}" class="badge-paid">PAID</span>
+                                        <span th:if="${bill.paymentStatus.name() == 'PENDING'}" class="badge-pending">PENDING</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a th:href="@{'/invoice/' + ${bill.id}}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentBills)}">
+                                    <td colspan="5" class="text-center text-muted py-4">No invoices generated yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
+        <div class="container">
+            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Containerized Deployment &bull; 2026
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
