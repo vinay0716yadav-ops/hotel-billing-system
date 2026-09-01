@@ -37,7 +37,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold mb-1">Room Inventory & Status</h2>
-                <p class="text-muted mb-0">Manage hotel rooms, tier pricing per night, and current occupancy status.</p>
+                <p class="text-muted mb-0">Manage hotel rooms, tier pricing per night (in ₹ Rupees), and current occupancy status.</p>
             </div>
             <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#newRoomModal">
                 <i class="fas fa-plus-circle me-1"></i> Add New Room
@@ -55,7 +55,7 @@
                             <span th:if="${room.status.name() == 'CLEANING'}" class="badge-pending"><i class="fas fa-broom me-1"></i> CLEANING</span>
                         </div>
                         <h5 class="fw-bold text-dark mt-2 mb-1" th:text="${room.roomType.displayName}">Deluxe Room</h5>
-                        <p class="text-muted small mb-3" th:text="${room.features}">Sea View, King Bed</p>
+                        <p class="text-muted small mb-3" th:text="${room.features}">Marine View, King Bed</p>
                     </div>
 
                     <div class="border-top pt-3 mt-2 d-flex justify-content-between align-items-center">
@@ -63,7 +63,7 @@
                             <span class="text-muted small">Floor: <strong th:text="${room.floor}">1</strong> &bull; Max: <strong th:text="${room.capacity}">2</strong> Guests</span>
                         </div>
                         <div>
-                            <span class="fw-extrabold fs-5 text-primary" th:text="'$' + ${#numbers.formatDecimal(room.pricePerNight, 1, 2)} + '/night'">$159.00/night</span>
+                            <span class="fw-extrabold fs-5 text-primary" th:text="'₹' + ${#numbers.formatDecimal(room.pricePerNight, 1, 2)} + '/night'">₹4,999.00/night</span>
                         </div>
                     </div>
                 </div>
@@ -88,13 +88,13 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Room Type <span class="text-danger">*</span></label>
                             <select class="form-select" id="roomTypeSelect" required>
-                                <option th:each="type : ${roomTypes}" th:value="${type.name()}" th:text="${type.displayName} + ' (Base: $' + ${type.basePricePerNight} + ')'"></option>
+                                <option th:each="type : ${roomTypes}" th:value="${type.name()}" th:text="${type.displayName} + ' (Base: ₹' + ${type.basePricePerNight} + ')'"></option>
                             </select>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-6">
-                                <label class="form-label fw-semibold">Price / Night ($)</label>
-                                <input type="number" step="0.01" class="form-control" id="roomPriceInput" placeholder="159.00" required>
+                                <label class="form-label fw-semibold">Price / Night (₹)</label>
+                                <input type="number" step="0.01" class="form-control" id="roomPriceInput" placeholder="4999.00" required>
                             </div>
                             <div class="col-6">
                                 <label class="form-label fw-semibold">Floor</label>
@@ -122,7 +122,7 @@
     <!-- Footer -->
     <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
         <div class="container">
-            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Containerized Deployment &bull; 2026
+            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Currency: ₹ INR &bull; 2026
         </div>
     </footer>
 

@@ -37,7 +37,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold mb-1">Guest Reservations & Check-Ins</h2>
-                <p class="text-muted mb-0">Record new guest arrivals, assign rooms, and manage check-out timelines.</p>
+                <p class="text-muted mb-0">Record new guest arrivals, assign rooms, and manage check-out timelines in Rupees (₹).</p>
             </div>
             <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#newBookingModal">
                 <i class="fas fa-user-plus me-1"></i> New Guest Check-In
@@ -70,7 +70,7 @@
                             <td class="fw-bold text-primary" th:text="${b.bookingReference}">BK-2026-1001</td>
                             <td>
                                 <strong class="text-dark" th:text="${b.guest.fullName}">Alexander Wright</strong>
-                                <div class="small text-muted" th:text="${b.guest.phone}">+1 (555) 234-5678</div>
+                                <div class="small text-muted" th:text="${b.guest.phone}">+91 98765 43210</div>
                             </td>
                             <td>
                                 <span class="badge bg-light text-dark border" th:text="'Room ' + ${b.room.roomNumber}">Room 201</span>
@@ -79,7 +79,7 @@
                             <td th:text="${#temporals.format(b.checkInDate, 'dd MMM yyyy')}">01 Sep 2026</td>
                             <td th:text="${#temporals.format(b.checkOutDate, 'dd MMM yyyy')}">04 Sep 2026</td>
                             <td><span class="badge bg-secondary-subtle text-secondary" th:text="${b.stayDurationNights} + ' Nights'">3 Nights</span></td>
-                            <td class="fw-semibold" th:text="'$' + ${#numbers.formatDecimal(b.effectiveRoomRate, 1, 2)}">$159.00</td>
+                            <td class="fw-semibold" th:text="'₹' + ${#numbers.formatDecimal(b.effectiveRoomRate, 1, 2)}">₹4,999.00</td>
                             <td>
                                 <span th:if="${b.status.name() == 'ACTIVE'}" class="badge-occupied">ACTIVE STAY</span>
                                 <span th:if="${b.status.name() == 'CHECKED_OUT'}" class="badge-paid">CHECKED OUT</span>
@@ -114,22 +114,23 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold">Guest Full Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="bookingGuestName" placeholder="e.g. John Doe" required>
+                                <input type="text" class="form-control" id="bookingGuestName" placeholder="e.g. Rahul Sharma" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold">Email Address <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="bookingGuestEmail" placeholder="e.g. john@example.com" required>
+                                <input type="email" class="form-control" id="bookingGuestEmail" placeholder="e.g. rahul@example.com" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold">Phone Number <span class="text-danger">*</span></label>
-                                <input type="tel" class="form-control" id="bookingGuestPhone" placeholder="e.g. +1 555-0123" required>
+                                <input type="tel" class="form-control" id="bookingGuestPhone" placeholder="e.g. +91 98765 01234" required>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label small fw-semibold">ID Proof Type</label>
                                 <select class="form-select" id="bookingIdType">
-                                    <option value="Passport" selected>Passport</option>
+                                    <option value="Aadhaar" selected>Aadhaar Card</option>
+                                    <option value="Passport">Passport</option>
                                     <option value="Driver License">Driver License</option>
-                                    <option value="National ID">National ID</option>
+                                    <option value="Voter ID">Voter ID</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -142,11 +143,11 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label small fw-semibold">City</label>
-                                <input type="text" class="form-control" id="bookingCity" placeholder="City">
+                                <input type="text" class="form-control" id="bookingCity" placeholder="City (e.g. Mumbai)">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label small fw-semibold">Country</label>
-                                <input type="text" class="form-control" id="bookingCountry" placeholder="Country" value="USA">
+                                <input type="text" class="form-control" id="bookingCountry" placeholder="Country" value="India">
                             </div>
                         </div>
 
@@ -159,7 +160,7 @@
                                     <option value="" selected disabled>-- Select Available Room --</option>
                                     <option th:each="rm : ${availableRooms}"
                                             th:value="${rm.id}"
-                                            th:text="'Room ' + ${rm.roomNumber} + ' - ' + ${rm.roomType.displayName} + ' ($' + ${#numbers.formatDecimal(rm.pricePerNight, 1, 2)} + '/night)'">
+                                            th:text="'Room ' + ${rm.roomNumber} + ' - ' + ${rm.roomType.displayName} + ' (₹' + ${#numbers.formatDecimal(rm.pricePerNight, 1, 2)} + '/night)'">
                                         Room 101
                                     </option>
                                 </select>
@@ -178,7 +179,7 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-label small fw-semibold">Special Requests / Instructions</label>
-                                <textarea class="form-control" id="bookingRequests" rows="2" placeholder="e.g. Extra towels, quiet room, late check-in"></textarea>
+                                <textarea class="form-control" id="bookingRequests" rows="2" placeholder="e.g. Extra pillows, sea-facing room, late check-in"></textarea>
                             </div>
                         </div>
                     </div>
@@ -196,7 +197,7 @@
     <!-- Footer -->
     <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
         <div class="container">
-            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Containerized Deployment &bull; 2026
+            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Currency: ₹ INR &bull; 2026
         </div>
     </footer>
 

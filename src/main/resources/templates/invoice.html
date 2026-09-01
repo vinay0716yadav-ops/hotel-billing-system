@@ -17,7 +17,7 @@
         </a>
         <div class="d-flex gap-2">
             <button onclick="window.print()" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
-                <i class="fas fa-print me-1"></i> Print / Save as PDF
+                <i class="fas fa-print me-1"></i> Print / Save as PDF (₹)
             </button>
         </div>
     </div>
@@ -29,16 +29,16 @@
             <div class="col-sm-7">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <i class="fas fa-hotel text-primary fs-2"></i>
-                    <h2 class="fw-bold mb-0 text-dark" th:text="${hotelName}">Grand Horizon Luxury Resort</h2>
+                    <h2 class="fw-bold mb-0 text-dark" th:text="${hotelName}">Grand Horizon Luxury Palace & Resort</h2>
                 </div>
-                <p class="text-muted small mb-1" th:text="${hotelAddress}">100 Oceanfront Avenue, Coastal Bay, CA 90210</p>
+                <p class="text-muted small mb-1" th:text="${hotelAddress}">100 Marine Bay Promenade, Mumbai, MH 400001</p>
                 <p class="text-muted small mb-0">
-                    <i class="fas fa-phone-alt me-1"></i> <span th:text="${hotelPhone}">+1 (800) 555-0199</span> &bull; 
-                    <i class="fas fa-envelope ms-2 me-1"></i> <span th:text="${hotelEmail}">billing@grandhorizonhotel.com</span>
+                    <i class="fas fa-phone-alt me-1"></i> <span th:text="${hotelPhone}">+91 (022) 5550-1999</span> &bull; 
+                    <i class="fas fa-envelope ms-2 me-1"></i> <span th:text="${hotelEmail}">billing@grandhorizonresort.in</span>
                 </p>
             </div>
             <div class="col-sm-5 text-sm-end mt-3 mt-sm-0">
-                <span class="text-uppercase fw-bold text-muted small">TAX INVOICE / RECEIPT</span>
+                <span class="text-uppercase fw-bold text-muted small">TAX INVOICE / GST RECEIPT</span>
                 <h3 class="fw-extrabold text-primary mb-1" th:text="${bill.invoiceNumber}">INV-2026-1001</h3>
                 <div class="mt-2">
                     <span th:if="${bill.paymentStatus.name() == 'PAID'}" class="badge-paid px-3 py-1 fs-6">
@@ -57,7 +57,7 @@
                 <h6 class="text-uppercase text-muted fw-bold small mb-2">Billed To (Guest Details)</h6>
                 <h5 class="fw-bold text-dark mb-1" th:text="${bill.booking.guest.fullName}">Alexander Wright</h5>
                 <div class="text-muted small" th:text="${bill.booking.guest.email}">alex@email.com</div>
-                <div class="text-muted small" th:text="${bill.booking.guest.phone}">+1 (555) 234-5678</div>
+                <div class="text-muted small" th:text="${bill.booking.guest.phone}">+91 98765 43210</div>
                 <div class="text-muted small" th:if="${bill.booking.guest.address != null}" th:text="${bill.booking.guest.address} + ', ' + ${bill.booking.guest.city}">Address</div>
                 <div class="text-muted small" th:if="${bill.booking.guest.idProofNumber != null}">ID: <span th:text="${bill.booking.guest.idProofType} + ' - ' + ${bill.booking.guest.idProofNumber}">Passport</span></div>
             </div>
@@ -79,8 +79,8 @@
                         <th style="width: 5%">#</th>
                         <th style="width: 50%">Description / Service</th>
                         <th class="text-center" style="width: 15%">Qty / Nights</th>
-                        <th class="text-end" style="width: 15%">Unit Rate</th>
-                        <th class="text-end" style="width: 15%">Amount</th>
+                        <th class="text-end" style="width: 15%">Unit Rate (₹)</th>
+                        <th class="text-end" style="width: 15%">Amount (₹)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,8 +92,8 @@
                             <div class="text-muted small">Room No: <span th:text="${bill.booking.room.roomNumber}">201</span> &bull; <span th:text="${bill.stayNights}">3</span> Nights Stay</div>
                         </td>
                         <td class="text-center" th:text="${bill.stayNights}">3</td>
-                        <td class="text-end" th:text="'$' + ${#numbers.formatDecimal(bill.roomRatePerNight, 1, 2)}">$159.00</td>
-                        <td class="text-end fw-semibold" th:text="'$' + ${#numbers.formatDecimal(bill.totalRoomCharge, 1, 2)}">$477.00</td>
+                        <td class="text-end" th:text="'₹' + ${#numbers.formatDecimal(bill.roomRatePerNight, 1, 2)}">₹4,999.00</td>
+                        <td class="text-end fw-semibold" th:text="'₹' + ${#numbers.formatDecimal(bill.totalRoomCharge, 1, 2)}">₹14,997.00</td>
                     </tr>
                     <!-- Itemized Services -->
                     <tr th:each="item, stat : ${bill.items}">
@@ -103,8 +103,8 @@
                             <div class="text-muted small" th:if="${item.category != null}" th:text="${item.category.displayName}">Category</div>
                         </td>
                         <td class="text-center" th:text="${item.quantity}">2</td>
-                        <td class="text-end" th:text="'$' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">$25.00</td>
-                        <td class="text-end fw-semibold" th:text="'$' + ${#numbers.formatDecimal(item.totalPrice, 1, 2)}">$50.00</td>
+                        <td class="text-end" th:text="'₹' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">₹450.00</td>
+                        <td class="text-end fw-semibold" th:text="'₹' + ${#numbers.formatDecimal(item.totalPrice, 1, 2)}">₹900.00</td>
                     </tr>
                 </tbody>
             </table>
@@ -115,7 +115,7 @@
             <div class="col-sm-6">
                 <div class="p-3 bg-light rounded-3 border">
                     <h6 class="fw-bold mb-2 small text-uppercase text-muted">Payment Information</h6>
-                    <div class="small mb-1"><span class="text-muted">Payment Mode:</span> <strong th:text="${bill.paymentMethod != null ? bill.paymentMethod.displayName : 'Not Settled'}">Credit Card</strong></div>
+                    <div class="small mb-1"><span class="text-muted">Payment Mode:</span> <strong th:text="${bill.paymentMethod != null ? bill.paymentMethod.displayName : 'Not Settled'}">UPI / Card</strong></div>
                     <div class="small mb-1" th:if="${bill.paymentTransactionId != null}"><span class="text-muted">Transaction ID:</span> <strong th:text="${bill.paymentTransactionId}">TXN-12345</strong></div>
                     <div class="small mb-1" th:if="${bill.paidAt != null}"><span class="text-muted">Settlement Time:</span> <span th:text="${#temporals.format(bill.paidAt, 'dd MMM yyyy, HH:mm')}">Time</span></div>
                     <div class="small text-muted mt-2" th:if="${bill.notes != null}">
@@ -127,20 +127,20 @@
                 <div class="border rounded-3 p-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal:</span>
-                        <strong th:text="'$' + ${#numbers.formatDecimal(bill.subtotal, 1, 2)}">$0.00</strong>
+                        <strong th:text="'₹' + ${#numbers.formatDecimal(bill.subtotal, 1, 2)}">₹0.00</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Tax & GST (<span th:text="${bill.taxPercentage}">12.0</span>%):</span>
-                        <span th:text="'$' + ${#numbers.formatDecimal(bill.taxAmount, 1, 2)}">$0.00</span>
+                        <span class="text-muted">GST Tax (<span th:text="${bill.taxPercentage}">12.0</span>%):</span>
+                        <span th:text="'₹' + ${#numbers.formatDecimal(bill.taxAmount, 1, 2)}">₹0.00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2" th:if="${bill.discountAmount > 0}">
                         <span class="text-muted">Discount (<span th:text="${bill.discountPercentage}">5.0</span>%):</span>
-                        <span class="text-danger" th:text="'-$' + ${#numbers.formatDecimal(bill.discountAmount, 1, 2)}">-$0.00</span>
+                        <span class="text-danger" th:text="'-₹' + ${#numbers.formatDecimal(bill.discountAmount, 1, 2)}">-₹0.00</span>
                     </div>
                     <hr class="my-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="fw-bold fs-5 text-dark">Total Payable:</span>
-                        <span class="fw-bold fs-4 text-primary" th:text="'$' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">$0.00</span>
+                        <span class="fw-bold fs-4 text-primary" th:text="'₹' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">₹0.00</span>
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
         <div class="row mt-5 pt-4 border-top text-muted small">
             <div class="col-7">
                 <h6 class="fw-bold small text-dark mb-1">Terms & Conditions</h6>
-                <p class="mb-0">Thank you for choosing Grand Horizon Resort. All room keys must be returned at checkout. Please keep this invoice for your tax and expense records.</p>
+                <p class="mb-0">Thank you for staying at Grand Horizon Luxury Palace & Resort. All room keys must be returned at checkout. Please preserve this invoice for your tax and GST claims.</p>
             </div>
             <div class="col-5 text-end">
                 <div class="d-inline-block border-top border-dark pt-2 px-4 mt-4">

@@ -35,11 +35,11 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // 1. Seed Rooms
+        // 1. Seed Rooms with Rupee rates
         Room r101 = roomService.createRoom(RoomRequestDto.builder()
                 .roomNumber("101")
                 .roomType(RoomType.STANDARD)
-                .pricePerNight(99.00)
+                .pricePerNight(2499.00)
                 .capacity(2)
                 .floor(1)
                 .features("Queen Bed, High-Speed Wi-Fi, Work Desk, Smart TV")
@@ -48,7 +48,7 @@ public class DataInitializer implements CommandLineRunner {
         Room r102 = roomService.createRoom(RoomRequestDto.builder()
                 .roomNumber("102")
                 .roomType(RoomType.STANDARD)
-                .pricePerNight(99.00)
+                .pricePerNight(2499.00)
                 .capacity(2)
                 .floor(1)
                 .features("Twin Beds, City View, Wi-Fi, Coffee Maker")
@@ -57,16 +57,16 @@ public class DataInitializer implements CommandLineRunner {
         Room r201 = roomService.createRoom(RoomRequestDto.builder()
                 .roomNumber("201")
                 .roomType(RoomType.DELUXE)
-                .pricePerNight(159.00)
+                .pricePerNight(4999.00)
                 .capacity(3)
                 .floor(2)
-                .features("King Bed, Ocean View, Private Balcony, Mini Bar")
+                .features("King Bed, Marine View, Private Balcony, Mini Bar")
                 .build());
 
         Room r202 = roomService.createRoom(RoomRequestDto.builder()
                 .roomNumber("202")
                 .roomType(RoomType.DELUXE)
-                .pricePerNight(159.00)
+                .pricePerNight(4999.00)
                 .capacity(3)
                 .floor(2)
                 .features("King Bed, Garden View, Rain Shower, Espresso Machine")
@@ -75,7 +75,7 @@ public class DataInitializer implements CommandLineRunner {
         Room r301 = roomService.createRoom(RoomRequestDto.builder()
                 .roomNumber("301")
                 .roomType(RoomType.SUITE)
-                .pricePerNight(249.00)
+                .pricePerNight(8999.00)
                 .capacity(4)
                 .floor(3)
                 .features("Master Bedroom, Living Room, Jacuzzi Tub, Panoramic Sea View")
@@ -84,23 +84,23 @@ public class DataInitializer implements CommandLineRunner {
         Room r401 = roomService.createRoom(RoomRequestDto.builder()
                 .roomNumber("401")
                 .roomType(RoomType.PRESIDENTIAL)
-                .pricePerNight(499.00)
+                .pricePerNight(19999.00)
                 .capacity(5)
                 .floor(4)
                 .features("Penthouse Suite, Private Terrace, Personal Butler Service, Private Pool")
                 .build());
 
-        // 2. Seed Hotel Chargeable Services
+        // 2. Seed Hotel Chargeable Services in Rupees
         List<HotelServiceItem> services = List.of(
-                HotelServiceItem.builder().name("Gourmet Breakfast Buffet").description("Continental & American spread").category(ServiceCategory.ROOM_SERVICE).unitPrice(25.00).available(true).build(),
-                HotelServiceItem.builder().name("Chef's Special 3-Course Dinner").description("Fine dining in-room dining service").category(ServiceCategory.ROOM_SERVICE).unitPrice(65.00).available(true).build(),
-                HotelServiceItem.builder().name("Club Sandwich & Fries").description("Classic hotel room service snack").category(ServiceCategory.ROOM_SERVICE).unitPrice(18.00).available(true).build(),
-                HotelServiceItem.builder().name("Imported Wine Selection").description("Cabernet Sauvignon / Pinot Grigio 750ml").category(ServiceCategory.BEVERAGES).unitPrice(45.00).available(true).build(),
-                HotelServiceItem.builder().name("Artisanal Mocktail / Cocktail").description("Crafted by resident mixologist").category(ServiceCategory.BEVERAGES).unitPrice(14.00).available(true).build(),
-                HotelServiceItem.builder().name("Express Laundry (5 Items)").description("Wash, dry, and ironed in 4 hours").category(ServiceCategory.LAUNDRY).unitPrice(30.00).available(true).build(),
-                HotelServiceItem.builder().name("Full Body Aromatherapy Massage (60 min)").description("Signature spa treatment").category(ServiceCategory.SPA_WELLNESS).unitPrice(95.00).available(true).build(),
-                HotelServiceItem.builder().name("VIP Airport Luxury Transfer").description("Chauffeured Mercedes Sedan").category(ServiceCategory.TRANSPORT).unitPrice(75.00).available(true).build(),
-                HotelServiceItem.builder().name("Late Check-out Extension").description("Extension until 4:00 PM").category(ServiceCategory.EXTRA_AMENITIES).unitPrice(40.00).available(true).build()
+                HotelServiceItem.builder().name("Gourmet Breakfast Buffet").description("Indian & Continental spread").category(ServiceCategory.ROOM_SERVICE).unitPrice(450.00).available(true).build(),
+                HotelServiceItem.builder().name("Royal 3-Course Dinner").description("Fine dining in-room dining service").category(ServiceCategory.ROOM_SERVICE).unitPrice(950.00).available(true).build(),
+                HotelServiceItem.builder().name("Club Sandwich & Masala Fries").description("Classic hotel room service snack").category(ServiceCategory.ROOM_SERVICE).unitPrice(350.00).available(true).build(),
+                HotelServiceItem.builder().name("Premium Wine Selection").description("Selected Vineyard 750ml").category(ServiceCategory.BEVERAGES).unitPrice(1200.00).available(true).build(),
+                HotelServiceItem.builder().name("Signature Mocktail / Cocktail").description("Crafted by resident mixologist").category(ServiceCategory.BEVERAGES).unitPrice(400.00).available(true).build(),
+                HotelServiceItem.builder().name("Express Laundry (5 Items)").description("Wash, dry, and ironed in 4 hours").category(ServiceCategory.LAUNDRY).unitPrice(450.00).available(true).build(),
+                HotelServiceItem.builder().name("Full Body Ayurvedic Massage (60 min)").description("Signature spa rejuvenation").category(ServiceCategory.SPA_WELLNESS).unitPrice(2500.00).available(true).build(),
+                HotelServiceItem.builder().name("Airport Luxury Chauffeur Transfer").description("Chauffeured Luxury Sedan").category(ServiceCategory.TRANSPORT).unitPrice(1800.00).available(true).build(),
+                HotelServiceItem.builder().name("Late Check-out Extension").description("Extension until 4:00 PM").category(ServiceCategory.EXTRA_AMENITIES).unitPrice(800.00).available(true).build()
         );
         serviceRepository.saveAll(services);
 
@@ -108,12 +108,12 @@ public class DataInitializer implements CommandLineRunner {
         Booking b1 = bookingService.createBooking(BookingRequestDto.builder()
                 .guestFullName("Alexander Wright")
                 .guestEmail("alexander.wright@techcorp.io")
-                .guestPhone("+1 (555) 234-5678")
+                .guestPhone("+91 98765 43210")
                 .idProofType("Passport")
                 .idProofNumber("P98234123")
-                .guestAddress("450 Market Street")
-                .guestCity("San Francisco")
-                .guestCountry("USA")
+                .guestAddress("450 Marine Drive")
+                .guestCity("Mumbai")
+                .guestCountry("India")
                 .roomId(r201.getId())
                 .checkInDate(LocalDate.now().minusDays(2))
                 .checkOutDate(LocalDate.now().plusDays(1))
@@ -124,33 +124,33 @@ public class DataInitializer implements CommandLineRunner {
         Booking b2 = bookingService.createBooking(BookingRequestDto.builder()
                 .guestFullName("Sophia Chen")
                 .guestEmail("sophia.chen@innovate.co")
-                .guestPhone("+1 (555) 876-5432")
-                .idProofType("Driver License")
-                .idProofNumber("DL-CA-449102")
-                .guestAddress("742 Evergreen Terrace")
-                .guestCity("Seattle")
-                .guestCountry("USA")
+                .guestPhone("+91 91234 56789")
+                .idProofType("Aadhaar / National ID")
+                .idProofNumber("4491-0293-8812")
+                .guestAddress("742 Brigade Road")
+                .guestCity("Bengaluru")
+                .guestCountry("India")
                 .roomId(r301.getId())
                 .checkInDate(LocalDate.now().minusDays(1))
                 .checkOutDate(LocalDate.now().plusDays(2))
                 .numberOfGuests(3)
-                .extraBedCharge(35.00)
-                .specialRequests("Honeymoon package, champagne on arrival")
+                .extraBedCharge(500.00)
+                .specialRequests("Sea-facing room, welcome drinks")
                 .build());
 
         // 4. Generate an Initial Settled Bill for Guest Alexander Wright
         billingService.generateBill(BillRequestDto.builder()
                 .bookingId(b1.getId())
                 .items(List.of(
-                        BillItemDto.builder().itemName("Gourmet Breakfast Buffet").category(ServiceCategory.ROOM_SERVICE).quantity(2).unitPrice(25.00).build(),
-                        BillItemDto.builder().itemName("VIP Airport Luxury Transfer").category(ServiceCategory.TRANSPORT).quantity(1).unitPrice(75.00).build(),
-                        BillItemDto.builder().itemName("Imported Wine Selection").category(ServiceCategory.BEVERAGES).quantity(1).unitPrice(45.00).build()
+                        BillItemDto.builder().itemName("Gourmet Breakfast Buffet").category(ServiceCategory.ROOM_SERVICE).quantity(2).unitPrice(450.00).build(),
+                        BillItemDto.builder().itemName("Airport Luxury Chauffeur Transfer").category(ServiceCategory.TRANSPORT).quantity(1).unitPrice(1800.00).build(),
+                        BillItemDto.builder().itemName("Premium Wine Selection").category(ServiceCategory.BEVERAGES).quantity(1).unitPrice(1200.00).build()
                 ))
                 .discountPercentage(5.0)
                 .paymentStatus(PaymentStatus.PAID)
                 .paymentMethod(PaymentMethod.CREDIT_CARD)
-                .paymentTransactionId("TXN-CC-8839201")
-                .notes("Settled upon checkout. Loyal member discount 5% applied.")
+                .paymentTransactionId("TXN-UPI-8839201")
+                .notes("Settled upon checkout. Privilege club 5% discount applied.")
                 .build());
     }
 }

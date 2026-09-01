@@ -38,7 +38,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold mb-1">Billing Folio & Invoice Management</h2>
-                <p class="text-muted mb-0">Generate checkout invoices, add room service items, apply taxes/discounts, and process payments.</p>
+                <p class="text-muted mb-0">Generate checkout invoices, add room service items, apply taxes/discounts, and process payments in Rupees (₹).</p>
             </div>
             <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#generateBillModal">
                 <i class="fas fa-plus-circle me-1"></i> Generate New Invoice
@@ -80,10 +80,10 @@
                                 <span class="badge bg-light text-dark border" th:text="'Room ' + ${bill.booking.room.roomNumber}">Room 201</span>
                             </td>
                             <td th:text="${bill.stayNights} + ' Night(s)'">2 Night(s)</td>
-                            <td th:text="'$' + ${#numbers.formatDecimal(bill.subtotal, 1, 2)}">$0.00</td>
-                            <td class="small text-muted" th:text="'$' + ${#numbers.formatDecimal(bill.taxAmount, 1, 2)} + ' (' + ${bill.taxPercentage} + '%)'">$0.00</td>
-                            <td class="small text-muted" th:text="'-$' + ${#numbers.formatDecimal(bill.discountAmount, 1, 2)} + ' (' + ${bill.discountPercentage} + '%)'">-$0.00</td>
-                            <td class="fw-bold text-dark fs-6" th:text="'$' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">$0.00</td>
+                            <td th:text="'₹' + ${#numbers.formatDecimal(bill.subtotal, 1, 2)}">₹0.00</td>
+                            <td class="small text-muted" th:text="'₹' + ${#numbers.formatDecimal(bill.taxAmount, 1, 2)} + ' (' + ${bill.taxPercentage} + '%)'">₹0.00</td>
+                            <td class="small text-muted" th:text="'-₹' + ${#numbers.formatDecimal(bill.discountAmount, 1, 2)} + ' (' + ${bill.discountPercentage} + '%)'">-₹0.00</td>
+                            <td class="fw-bold text-dark fs-6" th:text="'₹' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">₹0.00</td>
                             <td>
                                 <span th:if="${bill.paymentStatus.name() == 'PAID'}" class="badge-paid"><i class="fas fa-check-circle me-1"></i> PAID</span>
                                 <span th:if="${bill.paymentStatus.name() == 'PENDING'}" class="badge-pending"><i class="fas fa-clock me-1"></i> PENDING</span>
@@ -103,7 +103,7 @@
                                             th:data-invoice="${bill.invoiceNumber}"
                                             th:data-amount="${bill.netTotal}"
                                             title="Mark Paid">
-                                        <i class="fas fa-dollar-sign"></i> Pay
+                                        <i class="fas fa-rupee-sign"></i> Pay
                                     </button>
                                 </div>
                             </td>
@@ -178,15 +178,16 @@
                                     <div class="col-6">
                                         <label class="form-label small fw-semibold">Payment Mode</label>
                                         <select class="form-select" id="billingPaymentMethod">
+                                            <option value="UPI" selected>UPI / QR Code</option>
                                             <option value="CREDIT_CARD">Credit / Debit Card</option>
                                             <option value="CASH">Cash</option>
-                                            <option value="UPI">UPI / QR Code</option>
                                             <option value="NET_BANKING">Net Banking</option>
+                                            <option value="CORPORATE_BILLING">Corporate Billing</option>
                                         </select>
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label small fw-semibold">Transaction ID</label>
-                                        <input type="text" class="form-control" id="billingTransactionId" placeholder="Optional">
+                                        <input type="text" class="form-control" id="billingTransactionId" placeholder="Optional UPI/Card Ref">
                                     </div>
                                 </div>
 
@@ -210,8 +211,8 @@
                                                     th:data-name="${svc.name}"
                                                     th:data-price="${svc.unitPrice}"
                                                     th:data-category="${svc.category}"
-                                                    th:text="${svc.name} + ' ($' + ${#numbers.formatDecimal(svc.unitPrice, 1, 2)} + ')'">
-                                                Breakfast ($25.00)
+                                                    th:text="${svc.name} + ' (₹' + ${#numbers.formatDecimal(svc.unitPrice, 1, 2)} + ')'">
+                                                Breakfast (₹450.00)
                                             </option>
                                         </select>
                                     </div>
@@ -248,15 +249,15 @@
 
                                 <!-- Bill Calculation Breakdown -->
                                 <div class="p-3 bg-light rounded-3">
-                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Total Room Charges:</span> <span id="summaryRoomTotal" class="fw-semibold">$0.00</span></div>
-                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Total Service Charges:</span> <span id="summaryServicesTotal" class="fw-semibold">$0.00</span></div>
-                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Subtotal:</span> <span id="summarySubtotal" class="fw-semibold">$0.00</span></div>
-                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Taxes:</span> <span id="summaryTaxAmount" class="text-muted">$0.00</span></div>
-                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Discount:</span> <span id="summaryDiscountAmount" class="text-danger">-$0.00</span></div>
+                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Total Room Charges:</span> <span id="summaryRoomTotal" class="fw-semibold">₹0.00</span></div>
+                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Total Service Charges:</span> <span id="summaryServicesTotal" class="fw-semibold">₹0.00</span></div>
+                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Subtotal:</span> <span id="summarySubtotal" class="fw-semibold">₹0.00</span></div>
+                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Taxes (GST):</span> <span id="summaryTaxAmount" class="text-muted">₹0.00</span></div>
+                                    <div class="d-flex justify-content-between mb-1"><span class="text-muted">Discount:</span> <span id="summaryDiscountAmount" class="text-danger">-₹0.00</span></div>
                                     <hr class="my-2">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="fw-bold fs-5 text-dark">Net Payable Total:</span>
-                                        <span id="summaryNetTotal" class="fw-bold fs-4 text-primary">$0.00</span>
+                                        <span id="summaryNetTotal" class="fw-bold fs-4 text-primary">₹0.00</span>
                                     </div>
                                 </div>
                             </div>
@@ -291,24 +292,24 @@
                             </div>
                             <div class="text-end">
                                 <small class="text-muted">Amount Due</small>
-                                <h5 class="fw-bold text-success mb-0" id="payModalAmount">$0.00</h5>
+                                <h5 class="fw-bold text-success mb-0" id="payModalAmount">₹0.00</h5>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Payment Method <span class="text-danger">*</span></label>
                             <select class="form-select" id="payModalMethod" required>
-                                <option value="CREDIT_CARD" selected>Credit / Debit Card</option>
+                                <option value="UPI" selected>UPI / Instant Transfer / QR</option>
+                                <option value="CREDIT_CARD">Credit / Debit Card</option>
                                 <option value="CASH">Cash</option>
-                                <option value="UPI">UPI / Instant Transfer</option>
                                 <option value="NET_BANKING">Net Banking</option>
                                 <option value="CORPORATE_BILLING">Corporate Billing</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Transaction / Reference ID</label>
-                            <input type="text" class="form-control" id="payModalTxnId" placeholder="e.g. TXN-10293847">
+                            <label class="form-label">Transaction / UPI Reference ID</label>
+                            <input type="text" class="form-control" id="payModalTxnId" placeholder="e.g. UPI-9920192847">
                         </div>
 
                         <div>
@@ -330,7 +331,7 @@
     <!-- Footer -->
     <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
         <div class="container">
-            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Containerized Deployment &bull; 2026
+            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Currency: ₹ INR &bull; 2026
         </div>
     </footer>
 

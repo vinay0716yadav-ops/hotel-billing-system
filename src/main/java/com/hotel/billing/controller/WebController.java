@@ -23,20 +23,23 @@ public class WebController {
     private final RoomService roomService;
     private final HotelServiceItemService hotelServiceItemService;
 
-    @Value("${hotel.name:Grand Horizon Luxury Resort}")
+    @Value("${hotel.name:Grand Horizon Luxury Palace & Resort}")
     private String hotelName;
 
-    @Value("${hotel.address:100 Oceanfront Avenue, Coastal Bay, CA 90210}")
+    @Value("${hotel.address:100 Marine Bay Promenade, Mumbai, MH 400001}")
     private String hotelAddress;
 
-    @Value("${hotel.phone:+1 (800) 555-0199}")
+    @Value("${hotel.phone:+91 (022) 5550-1999}")
     private String hotelPhone;
 
-    @Value("${hotel.email:billing@grandhorizonhotel.com}")
+    @Value("${hotel.email:billing@grandhorizonresort.in}")
     private String hotelEmail;
 
     @Value("${hotel.tax-rate-percentage:12.0}")
     private double taxRatePercentage;
+
+    @Value("${hotel.currency-symbol:₹}")
+    private String currencySymbol;
 
     public WebController(DashboardService dashboardService,
                          BillingService billingService,
@@ -56,6 +59,7 @@ public class WebController {
         model.addAttribute("hotelPhone", hotelPhone);
         model.addAttribute("hotelEmail", hotelEmail);
         model.addAttribute("defaultTaxRate", taxRatePercentage);
+        model.addAttribute("currencySymbol", currencySymbol);
     }
 
     @GetMapping("/")

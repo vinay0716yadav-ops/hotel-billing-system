@@ -1,4 +1,4 @@
-// Hotel Billing System Frontend Logic
+// Hotel Billing System Frontend Logic (Rupees INR Currency)
 
 document.addEventListener('DOMContentLoaded', () => {
     initBillingForm();
@@ -25,10 +25,10 @@ function initBillingForm() {
         document.getElementById('displayGuest').textContent = guestName;
         document.getElementById('displayRoom').textContent = `Room ${roomNumber}`;
         document.getElementById('displayNights').textContent = `${nights} Night(s)`;
-        document.getElementById('displayRate').textContent = `$${rate.toFixed(2)}/night`;
+        document.getElementById('displayRate').textContent = `₹${rate.toFixed(2)}/night`;
 
         const roomTotal = rate * nights;
-        document.getElementById('summaryRoomTotal').textContent = `$${roomTotal.toFixed(2)}`;
+        document.getElementById('summaryRoomTotal').textContent = `₹${roomTotal.toFixed(2)}`;
 
         recalculateBillTotals();
     });
@@ -104,8 +104,8 @@ function renderBillItemsTable() {
         tr.innerHTML = `
             <td><strong>${item.itemName}</strong><br><small class="text-muted">${item.category || 'General'}</small></td>
             <td class="text-center">${item.quantity}</td>
-            <td class="text-end">$${item.unitPrice.toFixed(2)}</td>
-            <td class="text-end fw-semibold">$${(item.unitPrice * item.quantity).toFixed(2)}</td>
+            <td class="text-end">₹${item.unitPrice.toFixed(2)}</td>
+            <td class="text-end fw-semibold">₹${(item.unitPrice * item.quantity).toFixed(2)}</td>
             <td class="text-center">
                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeBillItem(${index})">
                     <i class="fas fa-trash"></i>
@@ -139,19 +139,19 @@ function recalculateBillTotals() {
     const netTotal = subtotal + taxAmount - discountAmount;
 
     if (document.getElementById('summaryServicesTotal')) {
-        document.getElementById('summaryServicesTotal').textContent = `$${servicesTotal.toFixed(2)}`;
+        document.getElementById('summaryServicesTotal').textContent = `₹${servicesTotal.toFixed(2)}`;
     }
     if (document.getElementById('summarySubtotal')) {
-        document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('summarySubtotal').textContent = `₹${subtotal.toFixed(2)}`;
     }
     if (document.getElementById('summaryTaxAmount')) {
-        document.getElementById('summaryTaxAmount').textContent = `$${taxAmount.toFixed(2)} (${taxRate}%)`;
+        document.getElementById('summaryTaxAmount').textContent = `₹${taxAmount.toFixed(2)} (${taxRate}%)`;
     }
     if (document.getElementById('summaryDiscountAmount')) {
-        document.getElementById('summaryDiscountAmount').textContent = `-$${discountAmount.toFixed(2)} (${discountRate}%)`;
+        document.getElementById('summaryDiscountAmount').textContent = `-₹${discountAmount.toFixed(2)} (${discountRate}%)`;
     }
     if (document.getElementById('summaryNetTotal')) {
-        document.getElementById('summaryNetTotal').textContent = `$${netTotal.toFixed(2)}`;
+        document.getElementById('summaryNetTotal').textContent = `₹${netTotal.toFixed(2)}`;
     }
 }
 
@@ -216,7 +216,7 @@ function initPaymentModal() {
 
             document.getElementById('payModalBillId').value = billId;
             document.getElementById('payModalInvoiceNumber').textContent = invoiceNumber;
-            document.getElementById('payModalAmount').textContent = `$${parseFloat(amount).toFixed(2)}`;
+            document.getElementById('payModalAmount').textContent = `₹${parseFloat(amount).toFixed(2)}`;
         });
     });
 

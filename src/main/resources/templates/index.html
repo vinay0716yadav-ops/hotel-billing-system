@@ -47,7 +47,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <div>
                 <h2 class="fw-bold mb-1">Billing Overview & Financial Analytics</h2>
-                <p class="text-muted mb-0">Real-time room occupancy, pending folios, and collected revenue metrics.</p>
+                <p class="text-muted mb-0">Real-time room occupancy, pending folios, and collected revenue metrics in Indian Rupees (₹).</p>
             </div>
             <div class="d-flex gap-2">
                 <a th:href="@{/bookings}" class="btn btn-outline-dark rounded-pill px-3">
@@ -65,11 +65,11 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted small text-uppercase fw-semibold">Total Revenue Collected</span>
-                        <h3 class="fw-bold my-1 text-dark" th:text="'$' + ${#numbers.formatDecimal(stats.totalRevenue, 1, 2)}">$0.00</h3>
+                        <h3 class="fw-bold my-1 text-dark" th:text="'₹' + ${#numbers.formatDecimal(stats.totalRevenue, 1, 2)}">₹0.00</h3>
                         <span class="text-success small fw-semibold"><i class="fas fa-check-circle me-1"></i> Settled Invoices</span>
                     </div>
                     <div class="stat-icon green">
-                        <i class="fas fa-dollar-sign"></i>
+                        <i class="fas fa-rupee-sign"></i>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted small text-uppercase fw-semibold">Pending Folios</span>
-                        <h3 class="fw-bold my-1 text-dark" th:text="'$' + ${#numbers.formatDecimal(stats.pendingRevenue, 1, 2)}">$0.00</h3>
+                        <h3 class="fw-bold my-1 text-dark" th:text="'₹' + ${#numbers.formatDecimal(stats.pendingRevenue, 1, 2)}">₹0.00</h3>
                         <span class="text-warning small fw-semibold" th:text="${stats.totalPendingInvoices} + ' pending check-out'"><i class="fas fa-clock me-1"></i> 0 pending</span>
                     </div>
                     <div class="stat-icon amber">
@@ -189,7 +189,7 @@
                                     <td>
                                         <span th:text="${bill.booking.guest.fullName}" class="fw-medium">Guest</span>
                                     </td>
-                                    <td class="fw-bold text-dark" th:text="'$' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">$0.00</td>
+                                    <td class="fw-bold text-dark" th:text="'₹' + ${#numbers.formatDecimal(bill.netTotal, 1, 2)}">₹0.00</td>
                                     <td>
                                         <span th:if="${bill.paymentStatus.name() == 'PAID'}" class="badge-paid">PAID</span>
                                         <span th:if="${bill.paymentStatus.name() == 'PENDING'}" class="badge-pending">PENDING</span>
@@ -215,7 +215,7 @@
     <!-- Footer -->
     <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
         <div class="container">
-            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Containerized Deployment &bull; 2026
+            <span th:text="${hotelName}">Hotel</span> Billing & Management Platform &bull; Currency: ₹ INR &bull; 2026
         </div>
     </footer>
 

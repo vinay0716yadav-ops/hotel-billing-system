@@ -35,14 +35,14 @@ spring:
     cache: false
     mode: HTML
 
-# Hotel Billing Custom Configuration
+# Hotel Billing Custom Configuration (Rupees INR)
 hotel:
-  name: "Grand Horizon Luxury Resort & Suites"
-  address: "100 Oceanfront Avenue, Coastal Bay, CA 90210"
-  phone: "+1 (800) 555-0199"
-  email: "billing@grandhorizonhotel.com"
-  tax-rate-percentage: 12.0 # Default 12% GST/VAT
-  currency-symbol: "$"
+  name: "Grand Horizon Luxury Palace & Resort"
+  address: "100 Marine Bay Promenade, Mumbai, MH 400001"
+  phone: "+91 (022) 5550-1999"
+  email: "billing@grandhorizonresort.in"
+  tax-rate-percentage: 12.0 # Default 12% GST
+  currency-symbol: "₹"
 
 management:
   endpoints:

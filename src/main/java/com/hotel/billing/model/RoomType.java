@@ -1,10 +1,10 @@
 package com.hotel.billing.model;
 
 public enum RoomType {
-    STANDARD("Standard Room", 99.00),
-    DELUXE("Deluxe Room", 159.00),
-    SUITE("Executive Suite", 249.00),
-    PRESIDENTIAL("Presidential Suite", 499.00);
+    STANDARD("Standard Room", 2499.00),
+    DELUXE("Deluxe Room", 4999.00),
+    SUITE("Executive Suite", 8999.00),
+    PRESIDENTIAL("Presidential Suite", 19999.00);
 
     private final String displayName;
     private final double basePricePerNight;
