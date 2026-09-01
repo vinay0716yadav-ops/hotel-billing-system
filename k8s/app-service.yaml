@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-billing-service
+  namespace: hotel-system
+  labels:
+    app.kubernetes.io/name: hotel-billing-system
+spec:
+  type: LoadBalancer # Defaults to LoadBalancer on cloud (or NodePort/ClusterIP on minikube)
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: hotel-billing-app

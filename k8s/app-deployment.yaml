@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-billing-app
+  namespace: hotel-system
+  labels:
+    app.kubernetes.io/name: hotel-billing-system
+    app.kubernetes.io/component: backend-web
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: hotel-billing-app
+  template:
+    metadata:
+      labels:
+        app: hotel-billing-app
+    spec:
+      # Wait for PostgreSQL to be ready before starting Spring Boot
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for PostgreSQL database at postgres-service:5432..."
+              until nc -z -w 2 postgres-service.hotel-system.svc.cluster.local 5432; do
+                echo "PostgreSQL is not ready yet, sleeping 2s..."
+                sleep 2
+              done
+              echo "PostgreSQL is reachable!"
+      containers:
+        - name: hotel-billing-app
+          image: vinay0716yadav-ops/hotel-billing-system:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: hotel-app-config
+            - secretRef:
+                name: hotel-db-secret
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
